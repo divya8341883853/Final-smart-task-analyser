@@ -1,0 +1,72 @@
+[
+  {
+    "title": "Fix critical authentication bug",
+    "due_date": "2025-11-29",
+    "estimated_hours": 2,
+    "importance": 10,
+    "dependencies": []
+  },
+  {
+    "title": "Deploy hotfix to production",
+    "due_date": "2025-11-29",
+    "estimated_hours": 1,
+    "importance": 9,
+    "dependencies": ["Fix critical authentication bug"]
+  },
+  {
+    "title": "Update API documentation",
+    "due_date": "2025-12-05",
+    "estimated_hours": 3,
+    "importance": 6,
+    "dependencies": []
+  },
+  {
+    "title": "Refactor database schema",
+    "due_date": "2025-12-10",
+    "estimated_hours": 12,
+    "importance": 7,
+    "dependencies": []
+  },
+  {
+    "title": "Write unit tests for payment module",
+    "due_date": "2025-12-03",
+    "estimated_hours": 4,
+    "importance": 8,
+    "dependencies": ["Refactor database schema"]
+  },
+  {
+    "title": "Design new landing page",
+    "due_date": "2025-12-15",
+    "estimated_hours": 8,
+    "importance": 5,
+    "dependencies": []
+  },
+  {
+    "title": "Setup monitoring alerts",
+    "due_date": "2025-11-30",
+    "estimated_hours": 2,
+    "importance": 8,
+    "dependencies": []
+  },
+  {
+    "title": "Code review for new feature",
+    "due_date": "2025-11-29",
+    "estimated_hours": 1.5,
+    "importance": 7,
+    "dependencies": []
+  },
+  {
+    "title": "Prepare quarterly report",
+    "due_date": "2025-12-01",
+    "estimated_hours": 5,
+    "importance": 9,
+    "dependencies": []
+  },
+  {
+    "title": "Optimize database queries",
+    "due_date": "2025-12-08",
+    "estimated_hours": 6,
+    "importance": 7,
+    "dependencies": ["Refactor database schema"]
+  }
+]
