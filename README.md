@@ -1,85 +1,151 @@
-# Smart Task Analyzer - React Frontend
+# Smart Task Analyzer - Full Stack Project
 
-A modern React + TypeScript frontend for the Smart Task Analyzer application.
+This repository contains a complete full-stack implementation of a Smart Task Analyzer system with an intelligent priority algorithm.
 
-## Development
+## Project Structure
 
-1. Install dependencies:
+```
+project/
+├── task_analyzer/          # Django Backend
+│   ├── manage.py
+│   ├── requirements.txt
+│   ├── README.md          # Detailed backend documentation
+│   ├── sample_tasks.json  # Sample data for testing
+│   ├── task_analyzer/     # Django project settings
+│   ├── tasks/             # Main Django app
+│   │   ├── priority_algorithm.py  # Core priority scoring logic
+│   │   ├── validators.py          # Input validation & edge cases
+│   │   ├── views.py               # API endpoints
+│   │   ├── urls.py
+│   │   └── tests.py               # 9 unit tests
+│   └── frontend/          # Frontend application
+│       ├── index.html
+│       ├── styles.css
+│       └── script.js
+```
+
+## Quick Start
+
+### 1. Backend Setup
+
 ```bash
-npm install
+cd task_analyzer
+pip install -r requirements.txt
+python manage.py migrate
+python manage.py runserver
 ```
 
-2. Create a `.env` file (copy from `.env.example`):
-```bash
-cp .env.example .env
-```
+Backend runs on `http://127.0.0.1:8000`
 
-3. Update the `.env` file with your API URL:
-```
-VITE_API_BASE_URL=http://127.0.0.1:8000/api/tasks
-```
+### 2. Frontend Setup
 
-4. Start the development server:
-```bash
-npm run dev
-```
-
-## Building for Production
+Open `task_analyzer/frontend/index.html` in a web browser, or serve it:
 
 ```bash
-npm run build
+cd task_analyzer/frontend
+python -m http.server 8080
 ```
 
-The build output will be in the `dist` folder.
+Visit `http://localhost:8080`
 
-## Deployment to Netlify
+### 3. Run Tests
 
-### Option 1: Deploy via Netlify CLI
-
-1. Install Netlify CLI:
 ```bash
-npm install -g netlify-cli
+cd task_analyzer
+python manage.py test tasks
 ```
 
-2. Login to Netlify:
-```bash
-netlify login
+## Key Features
+
+### Backend (Django + Python)
+- RESTful API with 2 endpoints (`/api/tasks/analyze/`, `/api/tasks/suggest/`)
+- Custom priority algorithm with 4 weighted components
+- Comprehensive edge case handling (circular deps, invalid dates, etc.)
+- 9 passing unit tests
+- CORS enabled for frontend integration
+
+### Frontend (HTML/CSS/JavaScript)
+- Manual task entry form
+- Bulk JSON import
+- 4 sorting modes (Smart Balance, Fastest Wins, High Impact, Deadline Driven)
+- Color-coded priority visualization
+- Detailed score breakdown display
+- Responsive design
+
+## Priority Algorithm
+
+The algorithm calculates a 0-10 priority score using:
+
+```
+Priority = (Urgency × 0.35) + (Importance × 0.30) + (Effort × 0.20) + (Dependencies × 0.15)
 ```
 
-3. Initialize and deploy:
-```bash
-netlify init
-netlify deploy --prod
+**Urgency**: Time-based scoring (overdue = 10, due today = 9.5, etc.)
+**Importance**: User-defined 1-10 scale
+**Effort**: Inverse of hours (quick wins scored higher)
+**Dependencies**: How many tasks this blocks
+
+See `task_analyzer/README.md` for detailed algorithm explanation.
+
+## API Endpoints
+
+### POST /api/tasks/analyze/
+Analyzes and sorts tasks by priority
+
+**Request:**
+```json
+{
+  "tasks": [
+    {
+      "title": "Fix bug",
+      "due_date": "2025-11-30",
+      "estimated_hours": 3,
+      "importance": 8,
+      "dependencies": []
+    }
+  ]
+}
 ```
 
-### Option 2: Deploy via Netlify Dashboard
+**Response:**
+```json
+{
+  "tasks": [...],  // with priority_score, explanation, etc.
+  "count": 1
+}
+```
 
-1. Push your code to GitHub/GitLab/Bitbucket
-2. Go to [Netlify](https://app.netlify.com)
-3. Click "Add new site" → "Import an existing project"
-4. Connect your repository
-5. Configure build settings:
-   - **Build command:** `npm run build`
-   - **Publish directory:** `dist`
-6. Add environment variable:
-   - **Key:** `VITE_API_BASE_URL`
-   - **Value:** Your deployed Django backend URL (e.g., `https://your-backend.railway.app/api/tasks`)
-7. Click "Deploy site"
+### POST /api/tasks/suggest/
+Returns top 3 recommended tasks with reasoning
 
-## Environment Variables
+## Technologies
 
-- `VITE_API_BASE_URL`: The base URL for the Django backend API
+- **Backend**: Python 3.13, Django 5.2.8, Django REST Framework
+- **Frontend**: Vanilla HTML/CSS/JavaScript
+- **Testing**: Django Test Framework (9 tests)
 
-**Important:** Make sure your Django backend is deployed and CORS is configured to allow requests from your Netlify domain.
+## Edge Cases Handled
 
-## Backend Deployment
+Missing fields (defaults applied)
+Invalid date formats
+Past due dates
+Circular dependencies
+Self-dependencies
+Negative/zero hours
+Out-of-range importance
+Duplicate task titles
 
-The Django backend needs to be deployed separately. Options include:
-- Railway (recommended)
-- Render
-- Heroku
-- DigitalOcean App Platform
-- AWS/GCP/Azure
+## Testing
 
-After deploying the backend, update the `VITE_API_BASE_URL` environment variable in Netlify with your backend URL.
+All 9 unit tests pass:
+- 3 Algorithm tests (urgency, importance, dependencies)
+- 3 Validator tests (circular deps, self-deps, validation)
+- 3 API tests (analyze, suggest, error handling)
 
+## Documentation
+
+Full documentation in `task_analyzer/README.md` includes:
+- Algorithm explanation (300-500 words)
+- Design decisions
+- Time breakdown
+- Future improvements
